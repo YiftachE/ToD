@@ -22,7 +22,16 @@ namespace TodREST.Controllers
 
         public bool Get(string computerId, string path, string date, string text, string tags)
         {
-            List<string> tagsList = tags.Split(new char[] { ',' }).ToList();
+            List<string> tagsList;
+            
+            if (!string.IsNullOrEmpty(tags))
+            {
+                tagsList = tags.Split(new char[] { ',' }).ToList();
+            }
+            else
+            {
+                tagsList = new List<string>();
+            }
 
             Picture pic = new Picture()
             {
