@@ -1,7 +1,7 @@
 (function () {
     "use strict";
     angular
-        .module("TodStreamingApp", ['ui.bootstrap', 'ngRoute', 'ui.bootstrap.datetimepicker', 'angular-loading-bar', 'ngAnimate', 'bootstrapLightbox', 'angular-flexslider'])
+        .module("TodStreamingApp", ['ui.bootstrap', 'ngRoute', 'ui.bootstrap.datetimepicker', 'angular-loading-bar', 'ngAnimate', 'angular-flexslider'])
         .config(function ($locationProvider, $routeProvider) {
             $routeProvider
                 .when('/', {
