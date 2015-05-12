@@ -6,7 +6,7 @@ using System.Web.Http;
 
 namespace TodREST
 {
-    public class Computer : ApiController
+    public class Computer
     {
         public string ComputerId
         {
@@ -14,7 +14,13 @@ namespace TodREST
             set;
         }
 
-        public List<double> Location
+        public double X
+        {
+            get;
+            set;
+        }
+
+        public double Y
         {
             get;
             set;

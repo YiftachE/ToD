@@ -31,11 +31,16 @@ namespace TodREST
             return result.Success;
         }
 
-        public static bool Insert(Picture data)
+        public static bool Insert(object data)
         {
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(data, Newtonsoft.Json.Formatting.None);
 
-            var result = _elasticClient.Raw.Index(INDEX_NAME, PICTURE_OBJECT_TYPE, json);
+            ElasticsearchResponse<DynamicDictionary> result;
+
+            if (data is Picture)
+                result = _elasticClient.Raw.Index(INDEX_NAME, PICTURE_OBJECT_TYPE, json);
+            else 
+                result = _elasticClient.Raw.Index(INDEX_NAME, COMPUTER_OBJECT_TYPE, json);
 
             return result.Success;
         }
@@ -61,18 +66,6 @@ namespace TodREST
             return response.Documents.First().Path;
         }
 
-        public static List<Picture> GetPicturesOfComputer(string computerId)
-        {
-            ISearchResponse<Picture> response =
-                _elasticClient.Search<Picture>(s => s
-                    .Type(PICTURE_OBJECT_TYPE)
-                    .From(0)
-                    .SortAscending("Date")
-                    .QueryString(string.Format("ComputerId:{0}", computerId)));
-
-            return response.Documents.ToList();            
-        }
-
         public static List<Picture> GetPicturesOfComputer(string computerId, DateTime startDate, DateTime endDate)
         {
             ISearchResponse<Picture> response =
@@ -81,8 +74,8 @@ namespace TodREST
                     .From(0)
                     .Size(100)
                     .SortAscending("Date")
-                    .QueryString(string.Format("ComputerId:{0}&Date:>={1}&Date:<={2}", 
-                        computerId, startDate.ToString(), endDate.ToString())));
+                    .Filter(f => f.Range(r => r.OnField("Date").GreaterOrEquals(startDate).LowerOrEquals(endDate)))
+                    .QueryString(string.Format("ComputerId:*{0}*", computerId)));
 
             return response.Documents.ToList();
         }
