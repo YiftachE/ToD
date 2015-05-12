@@ -1,15 +1,24 @@
-<div class="SearchForm">
-    <h1 class="Headline">
-        חפש!
-    </h1>
-    <input type="text" value="הכנס שם מחשב">
-    <br>
-    <div dir="ltr">
-        <datetimepicker min-date="minDate" show-weeks="showWeeks" hour-step="hourStep" minute-step="minuteStep" ng-model="date" show-meridian="showMeridian" date-format="dd-MMM-yyyy" date-options="dateOptions" date-disabled="disabled(date, mode)" readonly-time="false"></datetimepicker>
-        <datetimepicker min-date="minDate" show-weeks="showWeeks" hour-step="hourStep" minute-step="minuteStep" ng-model="date" show-meridian="showMeridian" date-format="dd-MMM-yyyy" date-options="dateOptions" date-disabled="disabled(date, mode)" readonly-time="false"></datetimepicker>
-        <a href="/media/{2}">
-
-   aaa 
-          </a>
+<form dir="ltr">
+    <div class="form-group">
+        <label for="inputComputer">Computer Name</label>
+        <input ng-model="computerName" type="text" class="form-control comp-name-input" id="inputComputer" placeholder="Name" maxlength="100">
     </div>
-</div>
+    <button ng-click="ToggleDateSelector()" class="btn-success">{{dateFilterMessage}}</button>
+    <hr>
+    <div collapse="isCollapsed">
+        <div class="well well-lg">
+            <center>
+                <div class="form-group">
+
+                    <label for="startDatePicker">Start Date:</label>
+                    <datetimepicker id="startDatePicker" min-date="minDate" show-weeks="showWeeks" hour-step="hourStep" minute-step="minuteStep" ng-model="startDate" show-meridian="showMeridian" date-format="dd-MMM-yyyy" date-options="dateOptions" date-disabled="disabled(date, mode)" readonly-time="false"></datetimepicker>
+
+                    <label style="margin-left:30px" for="inputPassword">End Date:</label>
+                    <datetimepicker min-date="minDate" show-weeks="showWeeks" hour-step="hourStep" minute-step="minuteStep" ng-model="endDate" show-meridian="showMeridian" date-format="dd-MMM-yyyy" date-options="dateOptions" date-disabled="disabled(date, mode)" readonly-time="false"></datetimepicker>
+
+                </div>
+            </center>
+        </div>
+    </div>
+    <button ng-click="Search()" class="btn btn-primary">Search</button>
+</form>

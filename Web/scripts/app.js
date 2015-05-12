@@ -1,18 +1,18 @@
 (function () {
     "use strict";
     angular
-        .module("TodStreamingApp", ['ui.bootstrap', 'ngRoute', 'ui.bootstrap.datetimepicker', 'angular-loading-bar', 'ngAnimate', 'angular-flexslider'])
+        .module("TodStreamingApp", ['ui.bootstrap', 'ngRoute', 'ui.bootstrap.datetimepicker', 'angular-loading-bar', 'ngAnimate', 'angular-flexslider','ToDStreamingApp.services'])
         .config(function ($locationProvider, $routeProvider) {
             $routeProvider
                 .when('/', {
                     templateUrl: 'pages/home.html',
                     controller: 'homePageController'
                 })
-                .when('/results:query', {
+                .when('/results/:query', {
                     templateUrl: 'pages/results.html',
                     controller: 'resultPageController'
                 })
-                .when('/media/:uuid', {
+                .when('/media/:query', {
                     templateUrl: '/pages/mediaPage.html',
                     controller: 'mediaController'
                 })
