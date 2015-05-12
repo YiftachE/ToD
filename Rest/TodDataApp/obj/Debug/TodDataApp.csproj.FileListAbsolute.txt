@@ -1,0 +1,6 @@
+C:\Maya\Tod\TodREST2\TodDataApp\obj\Debug\TodDataApp.csprojResolveAssemblyReference.cache
+C:\Maya\Tod\TodREST2\TodDataApp\bin\Debug\TodDataApp.exe.config
+C:\Maya\Tod\TodREST2\TodDataApp\bin\Debug\TodDataApp.exe
+C:\Maya\Tod\TodREST2\TodDataApp\bin\Debug\TodDataApp.pdb
+C:\Maya\Tod\TodREST2\TodDataApp\obj\Debug\TodDataApp.exe
+C:\Maya\Tod\TodREST2\TodDataApp\obj\Debug\TodDataApp.pdb
