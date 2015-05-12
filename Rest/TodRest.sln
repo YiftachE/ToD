@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodRest", "TodRest\TodRest.csproj", "{87BD4D64-CDE3-40EF-9F70-6F7069D48D0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TODInserter", "TODInserter\TODInserter.csproj", "{08D6FAD1-85DD-4F9B-8B0C-088CAD0DE945}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodDataApp", "TodDataApp\TodDataApp.csproj", "{48EB2959-7BA5-4277-9608-275A585D604D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{87BD4D64-CDE3-40EF-9F70-6F7069D48D0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87BD4D64-CDE3-40EF-9F70-6F7069D48D0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87BD4D64-CDE3-40EF-9F70-6F7069D48D0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87BD4D64-CDE3-40EF-9F70-6F7069D48D0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08D6FAD1-85DD-4F9B-8B0C-088CAD0DE945}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08D6FAD1-85DD-4F9B-8B0C-088CAD0DE945}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08D6FAD1-85DD-4F9B-8B0C-088CAD0DE945}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08D6FAD1-85DD-4F9B-8B0C-088CAD0DE945}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48EB2959-7BA5-4277-9608-275A585D604D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48EB2959-7BA5-4277-9608-275A585D604D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48EB2959-7BA5-4277-9608-275A585D604D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48EB2959-7BA5-4277-9608-275A585D604D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
