@@ -3,8 +3,14 @@
 
     angular
         .module("TodStreamingApp")
-        .controller("homePageController", ["$scope", "$location", "Querier",
-            function ($scope, $location, Querier) {
+        .controller("homePageController", ["$scope", "$location", "$splash", "Querier",
+            function ($scope, $location, $splash, Querier) {
+                $scope.openSplash = function () {
+                    $splash.open({
+                        title: 'Hi there!',
+                        message: "This sure is a fine modal, isn't it?"
+                    });
+                };
                 $scope.dateTimeNow = function () {
                     $scope.startDate = new Date();
                     $scope.endDate = new Date();
@@ -39,6 +45,7 @@
                 $scope.message[!$scope.dateFlag] = "Cancel"
                 $scope.dateFilterMessage = $scope.message[$scope.dateFlag]
                 $scope.ToggleDateSelector = function () {
+                    $scope.openSplash();
                     $scope.dateFlag = !$scope.dateFlag;
                     $scope.isCollapsed = $scope.dateFlag;
                     $scope.dateFilterMessage = $scope.message[$scope.dateFlag]
@@ -46,9 +53,7 @@
                 $scope.Search = function () {
                     if (!$scope.dateFlag) {
                         var query = Querier.BuildQuery($scope.computerName, $scope.startDate.toUTCString(), $scope.endDate.toUTCString());
-                    }
-                    else
-                    {
+                    } else {
                         var query = Querier.BuildQuery($scope.computerName);
                     }
                     Querier.Query(query, function (data) {
