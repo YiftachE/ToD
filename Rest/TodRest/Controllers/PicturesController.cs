@@ -12,12 +12,15 @@ namespace TodREST.Controllers
 {
     public class PicturesController : ApiController
     {
-        public List<Picture> Get(string computerId, DateTime? from = null, DateTime? to = null)
+        public List<Picture> Get(string computerId, int start = 0, int rows = 10, DateTime? from = null, DateTime? to = null)
         {
-            if (from.HasValue && to.HasValue)
-                return DataAccess.GetPicturesOfComputer(computerId, from.Value, to.Value);
-            else
-                return DataAccess.GetPicturesOfComputer(computerId);
+            if (!from.HasValue)
+                from = DateTime.MinValue;
+
+            if (!to.HasValue)
+                to = DateTime.MaxValue;
+
+            return DataAccess.GetPicturesOfComputer(computerId, from.Value, to.Value, start, rows);
         }
 
         public bool Get(string computerId, string path, string date, string text, string tags)

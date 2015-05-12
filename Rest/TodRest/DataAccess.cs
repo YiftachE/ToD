@@ -31,11 +31,16 @@ namespace TodREST
             return result.Success;
         }
 
-        public static bool Insert(Picture data)
+        public static bool Insert(object data)
         {
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(data, Newtonsoft.Json.Formatting.None);
 
-            var result = _elasticClient.Raw.Index(INDEX_NAME, PICTURE_OBJECT_TYPE, json);
+            ElasticsearchResponse<DynamicDictionary> result;
+
+            if (data is Picture)
+                result = _elasticClient.Raw.Index(INDEX_NAME, PICTURE_OBJECT_TYPE, json);
+            else 
+                result = _elasticClient.Raw.Index(INDEX_NAME, COMPUTER_OBJECT_TYPE, json);
 
             return result.Success;
         }
@@ -56,35 +61,51 @@ namespace TodREST
             ISearchResponse<Picture> response =
                 _elasticClient.Search<Picture>(s => s
                     .Type(PICTURE_OBJECT_TYPE)
-                    .QueryString(string.Format("GUID:{0}", guid)));
-
-            return response.Documents.First().Path;
+                    .Query(new QueryContainer(
+                        new MatchQuery()
+                        {
+                            Field = "GUID",
+                            Query = guid
+                        })));                    
+            
+            if (response.Documents.Count() != 0)
+            {
+                return response.Documents.First().Path;    
+            }
+            else
+            {
+                throw new KeyNotFoundException(string.Format("GUID '{0}' wasn't found", guid));
+            }            
         }
 
-        public static List<Picture> GetPicturesOfComputer(string computerId)
+        public static List<Picture> GetPicturesOfComputer(string computerId, DateTime startDate, DateTime endDate, int start, int rows)
         {
+            QueryContainer query = new FilteredQuery()
+            {
+                Filter = new FilterContainer(
+                    new RangeFilter()
+                    {
+                        Field = "Date",
+                        GreaterThanOrEqualTo = startDate.ToString("yyyy-MM-ddTHH:mm:ss"),
+                        LowerThanOrEqualTo = endDate.ToString("yyyy-MM-ddTHH:mm:ss")
+                    }),
+                Query = new QueryContainer(
+                    new MatchQuery()
+                    {
+                        Field = "ComputerId",
+                        Query = computerId
+                    })
+            };
+
             ISearchResponse<Picture> response =
                 _elasticClient.Search<Picture>(s => s
                     .Type(PICTURE_OBJECT_TYPE)
-                    .From(0)
+                    .From(start)
+                    .Size(rows)
                     .SortAscending("Date")
-                    .QueryString(string.Format("ComputerId:{0}", computerId)));
+                    .Query(query));
 
-            return response.Documents.ToList();            
-        }
-
-        public static List<Picture> GetPicturesOfComputer(string computerId, DateTime startDate, DateTime endDate)
-        {
-            ISearchResponse<Picture> response =
-                _elasticClient.Search<Picture>(s => s
-                    .Type(PICTURE_OBJECT_TYPE)
-                    .From(0)
-                    .Size(100)
-                    .SortAscending("Date")
-                    .QueryString(string.Format("ComputerId:{0}&Date:>={1}&Date:<={2}", 
-                        computerId, startDate.ToString(), endDate.ToString())));
-
-            return response.Documents.ToList();
+           return response.Documents.ToList();
         }
     }
 }
