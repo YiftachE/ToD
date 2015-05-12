@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="TodStreamingApp" dir="rtl" style="width:100%">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ToD</title>
+    <link rel="stylesheet" href="bower_components/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css">
+    <link href="http://zhaber.github.io/datetimepicker/datetimepicker.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="bower_components/flexslider/flexslider.css">
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/flexslider/jquery.flexslider.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-loading-bar/build/loading-bar.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="bower_components/angular-ui-bootstrap-datetimepicker/datetimepicker.js"></script>
+    <script src="bower_components/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.js"></script>
+    <script src="bower_components/angular-flexslider/angular-flexslider.js"></script>    
+    <script src="scripts/app.js"></script>
+    <script src="scripts/controllers/homePageController.js"></script>
+    <script src="scripts/controllers/mediaController.js"></script>
+    <script src="scripts/controllers/resultPageController.js"></script>
+
+</head>
+
+<body style="width:100%">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">ToD</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+    <div class="container">
+        <ng-view></ng-view>
+    </div>
+</body>
+
+</html>
