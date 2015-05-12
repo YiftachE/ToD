@@ -61,23 +61,51 @@ namespace TodREST
             ISearchResponse<Picture> response =
                 _elasticClient.Search<Picture>(s => s
                     .Type(PICTURE_OBJECT_TYPE)
-                    .QueryString(string.Format("GUID:{0}", guid)));
-
-            return response.Documents.First().Path;
+                    .Query(new QueryContainer(
+                        new MatchQuery()
+                        {
+                            Field = "GUID",
+                            Query = guid
+                        })));                    
+            
+            if (response.Documents.Count() != 0)
+            {
+                return response.Documents.First().Path;    
+            }
+            else
+            {
+                throw new KeyNotFoundException(string.Format("GUID '{0}' wasn't found", guid));
+            }            
         }
 
-        public static List<Picture> GetPicturesOfComputer(string computerId, DateTime startDate, DateTime endDate)
+        public static List<Picture> GetPicturesOfComputer(string computerId, DateTime startDate, DateTime endDate, int start, int rows)
         {
+            QueryContainer query = new FilteredQuery()
+            {
+                Filter = new FilterContainer(
+                    new RangeFilter()
+                    {
+                        Field = "Date",
+                        GreaterThanOrEqualTo = startDate.ToString("yyyy-MM-ddTHH:mm:ss"),
+                        LowerThanOrEqualTo = endDate.ToString("yyyy-MM-ddTHH:mm:ss")
+                    }),
+                Query = new QueryContainer(
+                    new MatchQuery()
+                    {
+                        Field = "ComputerId",
+                        Query = computerId
+                    })
+            };
+
             ISearchResponse<Picture> response =
                 _elasticClient.Search<Picture>(s => s
                     .Type(PICTURE_OBJECT_TYPE)
-                    .From(0)
-                    .Size(100)
+                    .From(start)
+                    .Size(rows)
                     .SortAscending("Date")
-                    .Filter(f => f.Range(r => r.OnField("Date").GreaterOrEquals(startDate).LowerOrEquals(endDate)))
-                    .QueryString(string.Format("ComputerId:*{0}*", computerId)));
+                    .Query(query));
 
-            return response.Documents.ToList();
+           return response.Documents.ToList();
         }
     }
 }
