@@ -81,9 +81,8 @@ namespace TodREST
                     .From(0)
                     .Size(100)
                     .SortAscending("Date")
-                    .QueryString(string.Format("ComputerId:{0}", computerId))
-                    .Query(q => 
-                        q.Range(v => v.OnField("date").GreaterOrEquals(startDate).LowerOrEquals(endDate))));
+                    .QueryString(string.Format("ComputerId:{0}&Date:>={1}&Date:<={2}", 
+                        computerId, startDate.ToString(), endDate.ToString())));
 
             return response.Documents.ToList();
         }
