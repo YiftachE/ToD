@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,7 +26,7 @@ namespace TODInserter
                 string tags = PerformLogo(files[i]);
                 string fileName = Path.GetFileNameWithoutExtension(files[i]);
 
-                string[] parts = fileName.Split(new char[]{'_', ' '});
+                string[] parts = fileName.Split(new char[] { '_', ' ' });
 
                 int day = int.Parse(parts[0]);
                 int month = int.Parse(parts[1]);
@@ -34,14 +36,21 @@ namespace TODInserter
                 int seconds = int.Parse(parts[5]);
 
                 DateTime date = new DateTime(year, month, day, hour, minutes, seconds);
+                string apiUrl = "http://localhost:53752/api/pictures";
+                var client = new HttpClient();
+                var values = new Dictionary<string, string>()
+                {
+                    {"computerId", computerId},
+                    {"text", text},
+                    {"path", files[i]},
+                    {"date", date.ToString()},
+                    {"tags",tags}
+                };
+                var content = new FormUrlEncodedContent(values);
 
-                string requestUrl =
-                    string.Format("http://localhost:53752/api/pictures?computerId={0}&text={1}&path={2}&date={3}&tags={4}",
-                    computerId, text, files[i], date.ToString(), tags); 
+                var response = client.PostAsync(apiUrl, content).Result;
+                response.EnsureSuccessStatusCode();
 
-                WebRequest request = WebRequest.Create(requestUrl);
-
-                WebResponse response = request.GetResponse();
             }
         }
 
@@ -54,7 +63,7 @@ namespace TODInserter
         {
             byte[] imageBytes = File.ReadAllBytes(imagePath);
 
-            HttpWebRequest request = 
+            HttpWebRequest request =
                 (HttpWebRequest)WebRequest.Create("https://script.google.com/macros/s/AKfycbxNBLRhGTAXMrnVbrQHk9pcRp_C4NH36Nw4u1caXPIijm2tsofc/exec");
 
             request.Method = "POST";
@@ -73,7 +82,7 @@ namespace TODInserter
 
             var response = (HttpWebResponse)request.GetResponse();
 
-            return new StreamReader(response.GetResponseStream()).ReadToEnd().Trim(new char[]{'\n'});
+            return new StreamReader(response.GetResponseStream()).ReadToEnd().Trim(new char[] { '\n' });
         }
     }
 }

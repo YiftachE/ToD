@@ -48,6 +48,31 @@ namespace TodREST.Controllers
 
             return DataAccess.Insert(pic);
         }
+        public bool Post([FromBody] InsertData postData)
+        {
+            List<string> tagsList;
+
+            if (!string.IsNullOrEmpty(postData.Tags))
+            {
+                tagsList = postData.Tags.Split(new char[] { ',' }).ToList();
+            }
+            else
+            {
+                tagsList = new List<string>();
+            }
+
+            Picture pic = new Picture()
+            {
+                ComputerId = postData.ComputerId,
+                Date = Convert.ToDateTime(postData.Date),
+                Path = postData.Path,
+                Tags = tagsList,
+                Text = postData.Text,
+                GUID = Guid.NewGuid().ToString()
+            };
+
+            return DataAccess.Insert(pic);
+        }
 
         public HttpResponseMessage Get(string guid)
         {
