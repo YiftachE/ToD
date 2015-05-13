@@ -8,7 +8,7 @@ namespace TodREST.Controllers
 {
     public class QueryController : ApiController
     {
-        public QueryResult Get(string computerId, int start = 0, int rows = 10, DateTime? from = null, DateTime? to = null)
+        public PicturesQueryResult Get(string computerId, int start = 0, int rows = 10, DateTime? from = null, DateTime? to = null)
         {
             if (!from.HasValue)
                 from = DateTime.MinValue;
@@ -30,7 +30,7 @@ namespace TodREST.Controllers
 
             DataAccess.Insert(query);
 
-            QueryResult result = new QueryResult()
+            PicturesQueryResult result = new PicturesQueryResult()
             {
                 Guid = query.Guid,
                 Pictures = pictures,
@@ -40,11 +40,49 @@ namespace TodREST.Controllers
             return result;
         }
 
-        public QueryResult Get(string queryGuid)
+        public PicturesQueryResult Get(string queryGuid)
         {
             Query query = DataAccess.GetQuery(queryGuid);
 
-            return Get(query.ComputerId, query.Start, query.Rows, query.From, query.To);
+            List<Picture> pictures = 
+                DataAccess.GetPicturesOfComputer(query.ComputerId, query.From, query.To, query.Start, query.Rows);
+
+            PicturesQueryResult result = new PicturesQueryResult()
+            {
+                Guid = query.Guid,
+                Pictures = pictures,
+                Total = pictures.Count
+            };
+
+            return result;
+
+        }
+
+        public ComputersQueryResult Post([FromBody] List<List<double>> polygon, int start = 0, int rows = 10)
+        {
+            if (polygon.Count < 3)
+                throw new Exception("Polygon must contain at least 3 points");
+
+            List<Computer> computers = DataAccess.GetComputers(polygon);
+
+            Query query = new Query()
+            {
+                Guid = Guid.NewGuid().ToString(),
+                Start = start,
+                Rows = rows,
+                Polygon = polygon
+            };
+
+            DataAccess.Insert(query);
+
+            ComputersQueryResult result = new ComputersQueryResult()
+            {
+                Guid = query.Guid,
+                Computers = computers,
+                Total = computers.Count
+            };
+
+            return result;
         }
     }
 }

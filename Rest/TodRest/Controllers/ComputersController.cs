@@ -6,11 +6,11 @@ using System.Web.Http;
 
 namespace TodREST.Controllers
 {
-    public class ComputerController
+    public class ComputersController : ApiController
     {
         public List<Computer> Get()
         {
-            return DataAccess.GetAllComputers();
+            return DataAccess.GetComputers();
         }
 
         public bool Post([FromBody] Computer postComputer)

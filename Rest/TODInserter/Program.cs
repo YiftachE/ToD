@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -14,6 +15,53 @@ namespace TODInserter
     class Program
     {
         static void Main(string[] args)
+        {
+            /*
+            Computer comp1 = new Computer()
+            {
+                ComputerId = "Maya",
+                Location = new GeoLocation()
+                {
+                    Lat = (float)34.811605,
+                    Lon = (float)32.094995
+                }
+            };*/
+
+            List<double> point1 = new List<double>(){30, 30};
+            List<double> point2 = new List<double>(){30, 40};
+            List<double> point3 = new List<double>(){40, 40};
+            List<double> point4 = new List<double>(){40, 30};
+
+            List<List<double>> polygon = new List<List<double>>();
+
+            polygon.Add(point1);
+            polygon.Add(point2);
+            polygon.Add(point3);
+            polygon.Add(point4);
+
+            string apiUrl = "http://localhost:53752/api/query";
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+            httpWebRequest.ContentType = "text/json";
+            httpWebRequest.Method = "POST";
+
+            string json = Newtonsoft.Json.JsonConvert.SerializeObject(polygon);
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                streamWriter.Write(json);
+                streamWriter.Flush();
+                streamWriter.Close();
+            }
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                var result = streamReader.ReadToEnd();
+            }
+        }
+
+        static void Main2(string[] args)
         {
 
             string computerId = args[0];
@@ -56,7 +104,6 @@ namespace TODInserter
 
                 string json = Newtonsoft.Json.JsonConvert.SerializeObject(pic);
 
-
                 using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
                 {
                     streamWriter.Write(json);
@@ -72,8 +119,12 @@ namespace TODInserter
             }
         }
 
-        private static List<string> PerformLogo(string p)
+        private static List<string> PerformLogo(string filePath)
         {
+            var proc = Process.Start("matlab.exe", string.Format("logo.m {0}", filePath));
+            
+            proc.WaitForExit();
+
             return new List<string>();
         }
 

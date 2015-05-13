@@ -13,19 +13,25 @@ namespace TodREST
             set;
         }
 
+        public List<List<double>> Polygon
+        {
+            get;
+            set;
+        }
+
         public string ComputerId
         {
             get;
             set;
         }
 
-        public DateTime? From
+        public DateTime From
         {
             get;
             set;
         }
 
-        public DateTime? To
+        public DateTime To
         {
             get;
             set;

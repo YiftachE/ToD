@@ -52,13 +52,19 @@ namespace TodREST
             return result.Success;
         }
 
-        public static List<Computer> GetAllComputers()
+        public static List<Computer> GetComputers()
         {
             ISearchResponse<Computer> response =
                 _elasticClient.Search<Computer>(s => s
                     .Type(COMPUTER_OBJECT_TYPE)
                     .From(0)
-                    .Size(100));
+                    .Size(100)
+                    .Query(new QueryContainer(
+                    new MatchQuery()
+                    {
+                        Field = "_type",
+                        Query = "computer"
+                    })));
 
             return response.Documents.ToList();    
         }
@@ -135,6 +141,24 @@ namespace TodREST
             {
                 throw new KeyNotFoundException(string.Format("GUID '{0}' wasn't found", queryGuid));
             }            
+        }
+
+        public static List<Computer> GetComputers(List<List<double>> polygon, int start = 0, int rows = 10)
+        {
+            QueryContainer query = new QueryContainer(new GeoShapePolygonQuery()
+            {
+                Field = "Location",
+                Shape = new PolygonGeoShape(new List<List<List<double>>>() { polygon})
+            });
+    
+            ISearchResponse<Computer> response =
+                _elasticClient.Search<Computer>(s => s
+                    .Type(COMPUTER_OBJECT_TYPE)
+                    .From(start)
+                    .Size(rows)
+                    .Query(query));
+
+            return response.Documents.ToList();
         }
     }
 }
