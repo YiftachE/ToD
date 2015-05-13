@@ -37,10 +37,14 @@ namespace TodREST
 
             ElasticsearchResponse<DynamicDictionary> result;
 
+            string type = string.Empty;
+
             if (data is Picture)
-                result = _elasticClient.Raw.Index(INDEX_NAME, PICTURE_OBJECT_TYPE, json);
-            else 
-                result = _elasticClient.Raw.Index(INDEX_NAME, COMPUTER_OBJECT_TYPE, json);
+                type = PICTURE_OBJECT_TYPE;
+            else
+                type = COMPUTER_OBJECT_TYPE;
+
+            result = _elasticClient.Raw.Index(INDEX_NAME, type, json);
 
             return result.Success;
         }

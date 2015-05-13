@@ -156,7 +156,6 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Computer.cs" />
     <Compile Include="Controllers\ComputerController.cs" />
-    <Compile Include="Controllers\InsertData.cs" />
     <Compile Include="DataAccess.cs" />
     <Compile Include="Picture.cs" />
     <Compile Include="Controllers\PicturesController.cs" />

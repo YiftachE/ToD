@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using TodREST;
 
 namespace TODInserter
 {
@@ -23,7 +24,7 @@ namespace TODInserter
             for (int i = 13; i < files.Length; i++)
             {
                 string text = PerformOCR(files[i]);
-                string tags = PerformLogo(files[i]);
+                List<string> tags = PerformLogo(files[i]);
                 string fileName = Path.GetFileNameWithoutExtension(files[i]);
 
                 string[] parts = fileName.Split(new char[] { '_', ' ' });
@@ -36,27 +37,44 @@ namespace TODInserter
                 int seconds = int.Parse(parts[5]);
 
                 DateTime date = new DateTime(year, month, day, hour, minutes, seconds);
-                string apiUrl = "http://localhost:53752/api/pictures";
-                var client = new HttpClient();
-                var values = new Dictionary<string, string>()
+
+                Picture pic = new Picture()
                 {
-                    {"computerId", computerId},
-                    {"text", text},
-                    {"path", files[i]},
-                    {"date", date.ToString()},
-                    {"tags",tags}
+                    ComputerId = computerId,
+                    Date = date,
+                    Path = files[i],
+                    Tags = tags,
+                    Text = text,
+                    GUID = Guid.NewGuid().ToString()
                 };
-                var content = new FormUrlEncodedContent(values);
+                    
+                string apiUrl = "http://localhost:53752/api/pictures";
 
-                var response = client.PostAsync(apiUrl, content).Result;
-                response.EnsureSuccessStatusCode();
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(apiUrl);
+                httpWebRequest.ContentType = "text/json";
+                httpWebRequest.Method = "POST";
 
+                string json = Newtonsoft.Json.JsonConvert.SerializeObject(pic);
+
+
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    streamWriter.Write(json);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                }
             }
         }
 
-        private static string PerformLogo(string p)
+        private static List<string> PerformLogo(string p)
         {
-            return string.Empty;
+            return new List<string>();
         }
 
         private static string PerformOCR(string imagePath)
