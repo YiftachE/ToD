@@ -16,6 +16,7 @@ namespace TodREST
         private const string INDEX_NAME = "tod";
         private const string PICTURE_OBJECT_TYPE = "picture";
         private const string COMPUTER_OBJECT_TYPE = "computer";
+        private const string QUERY_OBJECT_TYPE = "query";
 
         static DataAccess()
         {
@@ -41,8 +42,10 @@ namespace TodREST
 
             if (data is Picture)
                 type = PICTURE_OBJECT_TYPE;
-            else
+            else if (data is Computer)
                 type = COMPUTER_OBJECT_TYPE;
+            else
+                type = QUERY_OBJECT_TYPE;
 
             result = _elasticClient.Raw.Index(INDEX_NAME, type, json);
 
@@ -82,7 +85,7 @@ namespace TodREST
             }            
         }
 
-        public static List<Picture> GetPicturesOfComputer(string computerId, DateTime startDate, DateTime endDate, int start, int rows)
+        public static List<Picture> GetPicturesOfComputer(string computerId, DateTime startDate, DateTime endDate, int start = 0, int rows = 10)
         {
             QueryContainer query = new FilteredQuery()
             {
@@ -110,6 +113,28 @@ namespace TodREST
                     .Query(query));
 
            return response.Documents.ToList();
+        }
+
+        public static Query GetQuery(string queryGuid)
+        {
+            ISearchResponse<Query> response =
+                _elasticClient.Search<Query>(s => s
+                    .Type(QUERY_OBJECT_TYPE)
+                    .Query(new QueryContainer(
+                        new MatchQuery()
+                        {
+                            Field = "Guid",
+                            Query = queryGuid
+                        })));
+
+            if (response.Documents.Count() != 0)
+            {
+                return response.Documents.First();
+            }
+            else
+            {
+                throw new KeyNotFoundException(string.Format("GUID '{0}' wasn't found", queryGuid));
+            }            
         }
     }
 }

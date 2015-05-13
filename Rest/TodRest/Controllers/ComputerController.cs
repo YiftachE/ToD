@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Http;
 
 namespace TodREST.Controllers
 {
@@ -12,15 +13,9 @@ namespace TodREST.Controllers
             return DataAccess.GetAllComputers();
         }
 
-        public bool Post(string computerId, double x, double y)
+        public bool Post([FromBody] Computer postComputer)
         {
-            Computer computer = new Computer();
-            
-            computer.ComputerId = computerId;
-            computer.X = x;
-            computer.Y = y;
-
-            return DataAccess.Insert(computer);
+            return DataAccess.Insert(postComputer);
         }
     }
 }

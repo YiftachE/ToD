@@ -12,50 +12,9 @@ namespace TodREST.Controllers
 {
     public class PicturesController : ApiController
     {
-        public List<Picture> Get(string computerId, int start = 0, int rows = 10, DateTime? from = null, DateTime? to = null)
+        public HttpResponseMessage Get(string imageGuid)
         {
-            if (!from.HasValue)
-                from = DateTime.MinValue;
-
-            if (!to.HasValue)
-                to = DateTime.MaxValue;
-
-            return DataAccess.GetPicturesOfComputer(computerId, from.Value, to.Value, start, rows);
-        }
-
-        public bool Get(string computerId, string path, string date, string text, string tags)
-        {
-            List<string> tagsList;
-            
-            if (!string.IsNullOrEmpty(tags))
-            {
-                tagsList = tags.Split(new char[] { ',' }).ToList();
-            }
-            else
-            {
-                tagsList = new List<string>();
-            }
-
-            Picture pic = new Picture()
-            {
-                ComputerId = computerId,
-                Date = Convert.ToDateTime(date),
-                Path = path,
-                Tags = tagsList,
-                Text = text,
-                GUID = Guid.NewGuid().ToString()
-            };
-
-            return DataAccess.Insert(pic);
-        }
-        public bool Post([FromBody] Picture postPicture)
-        {
-            return DataAccess.Insert(postPicture);
-        }
-
-        public HttpResponseMessage Get(string guid)
-        {
-            string path = DataAccess.GetImagePath(guid);
+            string path = DataAccess.GetImagePath(imageGuid);
 
             Image img = Image.FromFile(path);
             MemoryStream ms = new MemoryStream();
@@ -64,6 +23,11 @@ namespace TodREST.Controllers
             result.Content = new ByteArrayContent(ms.ToArray());
             result.Content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
             return result;
+        }
+
+        public bool Post([FromBody] Picture postPicture)
+        {
+            return DataAccess.Insert(postPicture);
         }
     }
 }

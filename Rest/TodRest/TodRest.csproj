@@ -156,6 +156,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Computer.cs" />
     <Compile Include="Controllers\ComputerController.cs" />
+    <Compile Include="Controllers\QueryController.cs" />
     <Compile Include="DataAccess.cs" />
     <Compile Include="Picture.cs" />
     <Compile Include="Controllers\PicturesController.cs" />
@@ -168,6 +169,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Query.cs" />
+    <Compile Include="QueryResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
