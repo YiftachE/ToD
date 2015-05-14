@@ -28,10 +28,10 @@ angular.module('ui.splash', ['ui.bootstrap'])
                 '</section>'
             );
             $templateCache.put('splash/content.html',
-                '<div class="splash-content text-center">' +
+                '<div dir="ltr" class="splash-content text-center">' +
                 '  <h1 ng-bind="title"></h1>' +
                 '  <p class="lead" ng-bind="message"></p>' +
-                '  <button class="btn btn-lg btn-outline" ng-bind="btnText || \'Ok, cool\'" ng-click="$close()"></button>' +
+                '  <img src="/assets/Octopus.png"  ng-click="$close()"/>' +
                 '</div>'
             );
   }

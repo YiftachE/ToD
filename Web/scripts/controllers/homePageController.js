@@ -3,14 +3,13 @@
 
     angular
         .module("TodStreamingApp")
-        .controller("homePageController", ["$scope", "$location", "$splash", "Querier",
-            function ($scope, $location, $splash, Querier) {
-                $scope.openSplash = function () {
-                    $splash.open({
-                        title: 'Hi there!',
-                        message: "This sure is a fine modal, isn't it?"
-                    });
-                };
+        .controller("homePageController", ["$scope", "$location", "$splash", "Querier", "SharedData",
+            function ($scope, $location, $splash, Querier,SharedData) {
+                $splash.open({
+                    title: 'T.O.D',
+                    message: "Image streaming app"
+                });
+
                 $scope.dateTimeNow = function () {
                     $scope.startDate = new Date();
                     $scope.endDate = new Date();
@@ -43,9 +42,11 @@
                 $scope.isCollapsed = $scope.dateFlag;
                 $scope.message[$scope.dateFlag] = "Filter by Date"
                 $scope.message[!$scope.dateFlag] = "Cancel"
+                $scope.ChangeToMap=function(){
+                    $location.path("/mapsearch");
+                };
                 $scope.dateFilterMessage = $scope.message[$scope.dateFlag]
                 $scope.ToggleDateSelector = function () {
-                    $scope.openSplash();
                     $scope.dateFlag = !$scope.dateFlag;
                     $scope.isCollapsed = $scope.dateFlag;
                     $scope.dateFilterMessage = $scope.message[$scope.dateFlag]
@@ -58,8 +59,10 @@
                     }
                     Querier.Query(query, function (data) {
                         console.log(data);
+                        SharedData.Images = data;
+                        $location.path("/media/query=" + query);
                     });
-                    $location.path("/media/query=" + query);
+
                 };
         }]);
 }());

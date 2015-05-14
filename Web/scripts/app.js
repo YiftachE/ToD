@@ -1,8 +1,8 @@
 (function () {
     "use strict";
     angular
-        .module("TodStreamingApp", ['ui.bootstrap', 'ngRoute', 'ui.bootstrap.datetimepicker', 'angular-loading-bar', 'ngAnimate', 'angular-flexslider','ToDStreamingApp.services','ui.splash'])
-        .config(function ($locationProvider, $routeProvider) {
+        .module("TodStreamingApp", ['ui.bootstrap', 'ngRoute', 'ui.bootstrap.datetimepicker', 'angular-loading-bar', 'ngAnimate', 'angular-flexslider', 'ToDStreamingApp.services', 'ui.splash','uiGmapgoogle-maps'])
+        .config(function ($locationProvider, $routeProvider, uiGmapGoogleMapApiProvider) {
             $routeProvider
                 .when('/', {
                     templateUrl: 'pages/home.html',
@@ -16,10 +16,18 @@
                     templateUrl: '/pages/mediaPage.html',
                     controller: 'mediaController'
                 })
+                .when('/mapsearch', {
+                    templateUrl: '/pages/mapSearch.html',
+                    controller: 'mapSearchController'
+                })
                 .otherwise({
                     redirectTo: '/'
                 });
-
+            uiGmapGoogleMapApiProvider.configure({
+                //    key: 'your api key',
+                v: '3.17',
+                libraries: 'weather,geometry,visualization'
+            });
             $locationProvider.html5Mode({
                 enabled: true,
                 requireBase: false

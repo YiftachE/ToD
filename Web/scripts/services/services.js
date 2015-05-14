@@ -14,8 +14,11 @@
 
                 };
                 this.Query = function (queryText, callback) {
-                    $http.get("http://localhost:53752/api/pictures"+queryText).success(callback);
+                    $http.get("http://localhost:53752/api/pictures" + queryText).success(callback);
                 };
-            }]);
+            }])
+        .service('SharedData', function () {
+            this.Images = {};
+        });
 
 }());
