@@ -8,7 +8,8 @@ namespace TodREST.Controllers
 {
     public class QueryController : ApiController
     {
-        public PicturesQueryResult Get(string computerId, int start = 0, int rows = 10, DateTime? from = null, DateTime? to = null)
+        public PicturesQueryResult Get(string computerId,
+            string[] tags, string text = "", int start = 0, int rows = 10, DateTime? from = null, DateTime? to = null)
         {
             if (!from.HasValue)
                 from = DateTime.MinValue;
@@ -16,7 +17,8 @@ namespace TodREST.Controllers
             if (!to.HasValue)
                 to = DateTime.MaxValue;
 
-            List<Picture> pictures = DataAccess.GetPicturesOfComputer(computerId, from.Value, to.Value, start, rows);
+            List<Picture> pictures = DataAccess.GetPicturesOfComputer(
+                computerId, text, tags, from.Value, to.Value, start, rows);
 
             Query query = new Query()
             {
@@ -44,8 +46,8 @@ namespace TodREST.Controllers
         {
             Query query = DataAccess.GetQuery(queryGuid);
 
-            List<Picture> pictures = 
-                DataAccess.GetPicturesOfComputer(query.ComputerId, query.From, query.To, query.Start, query.Rows);
+            List<Picture> pictures =
+                DataAccess.GetPicturesOfComputer(query.ComputerId, query.Text, query.Tags, query.From, query.To, query.Start, query.Rows);
 
             PicturesQueryResult result = new PicturesQueryResult()
             {

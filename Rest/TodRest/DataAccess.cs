@@ -91,8 +91,32 @@ namespace TodREST
             }            
         }
 
-        public static List<Picture> GetPicturesOfComputer(string computerId, DateTime startDate, DateTime endDate, int start = 0, int rows = 10)
+        public static List<Picture> GetPicturesOfComputer(
+            string computerId, string text, string[] tags, DateTime startDate, DateTime endDate, int start = 0, int rows = 10)
         {
+            QueryContainer textContainer;
+            QueryContainer tagsContainer;
+
+            if (string.IsNullOrEmpty(text))
+                textContainer = new MatchAllQuery();
+            else
+                textContainer = new MatchQuery() { Field = "Text", Query = text };
+            
+            if ((tags == null) || (tags.Length > 0))
+            {
+                tagsContainer = new MatchAllQuery();
+            }
+            else
+            {
+                tagsContainer  = new QueryContainer(new MatchQuery() { Field = "Tags", Query = tags[0] });
+
+                for (int i = 1; i < tags.Length; i++)
+                {
+                    tagsContainer = tagsContainer && new MatchQuery(){ Field = "Tags", Query = tags[i]};
+                }
+            }
+
+
             QueryContainer query = new FilteredQuery()
             {
                 Filter = new FilterContainer(
@@ -110,13 +134,15 @@ namespace TodREST
                     })
             };
 
+            QueryContainer finalQuery = query && textContainer && tagsContainer;
+
             ISearchResponse<Picture> response =
                 _elasticClient.Search<Picture>(s => s
                     .Type(PICTURE_OBJECT_TYPE)
                     .From(start)
                     .Size(rows)
                     .SortAscending("Date")
-                    .Query(query));
+                    .Query(finalQuery));
 
            return response.Documents.ToList();
         }
