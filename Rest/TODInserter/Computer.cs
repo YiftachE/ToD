@@ -1,9 +1,7 @@
-﻿using Nest;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Http;
 
 namespace TodREST
 {
@@ -15,7 +13,6 @@ namespace TodREST
             set;
         }
 
-        [ElasticProperty(Type = FieldType.GeoPoint)]
         public GeoLocation Location
         {
             get;

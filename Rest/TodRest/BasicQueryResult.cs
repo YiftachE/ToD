@@ -1,22 +1,19 @@
-﻿using Nest;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Http;
 
 namespace TodREST
 {
-    public class Computer
+    public abstract class BasicQueryResult
     {
-        public string ComputerId
+        public string Guid
         {
             get;
             set;
         }
 
-        [ElasticProperty(Type = FieldType.GeoPoint)]
-        public GeoLocation Location
+        public int Total
         {
             get;
             set;

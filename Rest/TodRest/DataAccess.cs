@@ -16,6 +16,7 @@ namespace TodREST
         private const string INDEX_NAME = "tod";
         private const string PICTURE_OBJECT_TYPE = "picture";
         private const string COMPUTER_OBJECT_TYPE = "computer";
+        private const string QUERY_OBJECT_TYPE = "query";
 
         static DataAccess()
         {
@@ -37,21 +38,33 @@ namespace TodREST
 
             ElasticsearchResponse<DynamicDictionary> result;
 
+            string type = string.Empty;
+
             if (data is Picture)
-                result = _elasticClient.Raw.Index(INDEX_NAME, PICTURE_OBJECT_TYPE, json);
-            else 
-                result = _elasticClient.Raw.Index(INDEX_NAME, COMPUTER_OBJECT_TYPE, json);
+                type = PICTURE_OBJECT_TYPE;
+            else if (data is Computer)
+                type = COMPUTER_OBJECT_TYPE;
+            else
+                type = QUERY_OBJECT_TYPE;
+
+            result = _elasticClient.Raw.Index(INDEX_NAME, type, json);
 
             return result.Success;
         }
 
-        public static List<Computer> GetAllComputers()
+        public static List<Computer> GetComputers()
         {
             ISearchResponse<Computer> response =
                 _elasticClient.Search<Computer>(s => s
                     .Type(COMPUTER_OBJECT_TYPE)
                     .From(0)
-                    .Size(100));
+                    .Size(100)
+                    .Query(new QueryContainer(
+                    new MatchQuery()
+                    {
+                        Field = "_type",
+                        Query = "computer"
+                    })));
 
             return response.Documents.ToList();    
         }
@@ -78,8 +91,32 @@ namespace TodREST
             }            
         }
 
-        public static List<Picture> GetPicturesOfComputer(string computerId, DateTime startDate, DateTime endDate, int start, int rows)
+        public static List<Picture> GetPicturesOfComputer(
+            string computerId, string text, string[] tags, DateTime startDate, DateTime endDate, int start = 0, int rows = 10)
         {
+            QueryContainer textContainer;
+            QueryContainer tagsContainer;
+
+            if (string.IsNullOrEmpty(text))
+                textContainer = new MatchAllQuery();
+            else
+                textContainer = new MatchQuery() { Field = "Text", Query = text };
+            
+            if ((tags == null) || (tags.Length > 0))
+            {
+                tagsContainer = new MatchAllQuery();
+            }
+            else
+            {
+                tagsContainer  = new QueryContainer(new MatchQuery() { Field = "Tags", Query = tags[0] });
+
+                for (int i = 1; i < tags.Length; i++)
+                {
+                    tagsContainer = tagsContainer && new MatchQuery(){ Field = "Tags", Query = tags[i]};
+                }
+            }
+
+
             QueryContainer query = new FilteredQuery()
             {
                 Filter = new FilterContainer(
@@ -97,15 +134,57 @@ namespace TodREST
                     })
             };
 
+            QueryContainer finalQuery = query && textContainer && tagsContainer;
+
             ISearchResponse<Picture> response =
                 _elasticClient.Search<Picture>(s => s
                     .Type(PICTURE_OBJECT_TYPE)
                     .From(start)
                     .Size(rows)
                     .SortAscending("Date")
-                    .Query(query));
+                    .Query(finalQuery));
 
            return response.Documents.ToList();
+        }
+
+        public static Query GetQuery(string queryGuid)
+        {
+            ISearchResponse<Query> response =
+                _elasticClient.Search<Query>(s => s
+                    .Type(QUERY_OBJECT_TYPE)
+                    .Query(new QueryContainer(
+                        new MatchQuery()
+                        {
+                            Field = "Guid",
+                            Query = queryGuid
+                        })));
+
+            if (response.Documents.Count() != 0)
+            {
+                return response.Documents.First();
+            }
+            else
+            {
+                throw new KeyNotFoundException(string.Format("GUID '{0}' wasn't found", queryGuid));
+            }            
+        }
+
+        public static List<Computer> GetComputers(List<List<double>> polygon, int start = 0, int rows = 10)
+        {
+            QueryContainer query = new QueryContainer(new GeoShapePolygonQuery()
+            {
+                Field = "Location",
+                Shape = new PolygonGeoShape(new List<List<List<double>>>() { polygon})
+            });
+    
+            ISearchResponse<Computer> response =
+                _elasticClient.Search<Computer>(s => s
+                    .Type(COMPUTER_OBJECT_TYPE)
+                    .From(start)
+                    .Size(rows)
+                    .Query(query));
+
+            return response.Documents.ToList();
         }
     }
 }
