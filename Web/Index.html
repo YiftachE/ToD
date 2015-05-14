@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>ToD</title>
+    <link rel="stylesheet" href="site.css">
     <link rel="stylesheet" href="bower_components/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.css">
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css">
@@ -19,11 +20,14 @@
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script src="bower_components/angular-ui-bootstrap-datetimepicker/datetimepicker.js"></script>
-    <script src="bower_components/angular-flexslider/angular-flexslider.js"></script>    
+    <script src="bower_components/angular-flexslider/angular-flexslider.js"></script>
+    <script src="scripts/directive/splash.js"></script>
+    <script src="scripts/services/services.js"></script>
     <script src="scripts/app.js"></script>
     <script src="scripts/controllers/homePageController.js"></script>
     <script src="scripts/controllers/mediaController.js"></script>
     <script src="scripts/controllers/resultPageController.js"></script>
+
 
 </head>
 
@@ -31,7 +35,8 @@
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
+
+            <div c1ass="navbar-header">
                 <a class="navbar-brand" href="#">ToD</a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->

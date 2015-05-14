@@ -1,8 +1,8 @@
 <div class="row">
     <div class="col-md-12">
-        <flex-slider flex-slide="s in images" control-nav="false" pause-on-hover="true" slideshow-speed="1000" dir="ltr">
+        <flex-slider flex-slide="s in images track by $index" control-nav="false" pause-on-hover="true" slideshow-speed="1000" dir="ltr">
             <li>
-                <img ng-src="/assets/{{s}}">
+                <img ng-src="{{s}}">
             </li>
         </flex-slider>
         <progress id="progress" value="50" min="0" max="100">0%</progress>

@@ -3,9 +3,9 @@
 
     angular
         .module("TodStreamingApp")
-        .controller("mediaController", function ($scope) {
-            // controller homePageController for module TodStreamingApp
-            $scope.images=["1.png","5.png","9.png"];
-        });
-
+        .controller("mediaController", ["$scope", "Querier",
+            function ($scope, Querier) {
+                // controller homePageController for module TodStreamingApp
+                $scope.images = [];
+        }]);
 }());
