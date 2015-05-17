@@ -4,7 +4,7 @@
     angular
         .module("TodStreamingApp")
         .controller("homePageController", ["$scope", "$location", "$splash", "Querier", "SharedData",
-            function ($scope, $location, $splash, Querier,SharedData) {
+            function ($scope, $location, $splash, Querier, SharedData) {
                 $splash.open({
                     title: 'T.O.D',
                     message: "Image streaming app"
@@ -42,7 +42,7 @@
                 $scope.isCollapsed = $scope.dateFlag;
                 $scope.message[$scope.dateFlag] = "Filter by Date"
                 $scope.message[!$scope.dateFlag] = "Cancel"
-                $scope.ChangeToMap=function(){
+                $scope.ChangeToMap = function () {
                     $location.path("/mapsearch");
                 };
                 $scope.dateFilterMessage = $scope.message[$scope.dateFlag]
@@ -53,13 +53,13 @@
                 };
                 $scope.Search = function () {
                     if (!$scope.dateFlag) {
-                        var query = Querier.BuildQuery($scope.computerName, $scope.startDate.toUTCString(), $scope.endDate.toUTCString());
+                        var query = Querier.BuildQuery($scope.computerName, $scope.textData, undefined, $scope.startDate.toUTCString(), $scope.endDate.toUTCString());
                     } else {
-                        var query = Querier.BuildQuery($scope.computerName);
+                        var query = Querier.BuildQuery($scope.computerName, $scope.textData, undefined);
                     }
                     Querier.Query(query, function (data) {
                         console.log(data);
-                        SharedData.Images = data;
+                        SharedData.Images = data.Pictures;
                         $location.path("/media/query=" + query);
                     });
 

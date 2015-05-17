@@ -3,6 +3,11 @@
         <label for="inputComputer">Computer Name</label>
         <input ng-model="computerName" type="text" class="form-control comp-name-input" id="inputComputer" placeholder="Name" maxlength="100">
     </div>
+    <div class="form-group">
+        <label for="inputComputer">Text Search</label>
+        <input ng-model="textData" type="text" class="form-control comp-name-input" id="inputComputer" placeholder="Name" maxlength="100">
+    </div>
+    
     <button ng-click="ToggleDateSelector()" class="btn-success">{{dateFilterMessage}}</button>
     <hr>
     <div collapse="isCollapsed">
@@ -20,6 +25,5 @@
             </center>
         </div>
     </div>
-    <button ng-click="ChangeToMap()" class="btn btn-primary">Search by map</button>
     <button ng-click="Search()" class="btn btn-primary">Search</button>
 </form>

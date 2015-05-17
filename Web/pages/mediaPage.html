@@ -3,7 +3,7 @@
     <div class="col-md-9">
         <flex-slider pause-play="true" after="after($slider)" start="showProgressBar()" flex-slide="s in images track by $index" control-nav="false" pause-on-hover="true" slideshow-speed="1000" dir="ltr">
             <li>
-                <img ng-src="http://localhost:53752/api/Pictures?guid={{s.GUID}}">
+                <img ng-src="http://localhost:53752/api/Pictures?imageGuid={{s.GUID}}">
             </li>
         </flex-slider>
         <div ng-show="sliderLoaded">
@@ -15,7 +15,7 @@
         <div class="list-group">
             <a href="#" class="list-group-item ">
                 <h4 class="list-group-item-heading">Text in image</h4>
-                <p class="list-group-item-text">{{images[currentImageIndex+1].Text}}</p>
+                <p class="list-group-item-text">{{images[currentImageIndex-1].Text}}</p>
             </a>
         </div>
     </div>
